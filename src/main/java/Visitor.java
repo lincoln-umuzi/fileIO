@@ -1,3 +1,6 @@
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -52,10 +55,13 @@ public class Visitor {
 
 
                 System.out.println("File created: " + visitorData.getName());
+                Logger logger = LogManager.getLogger(Visitor.class);
+                logger.info("results in "+ "visitor_"+fileName+".txt" );
             } else {
+                finaleData += full_name + " Age: "+age + " Date: "+ date_of_visit + " Time: "+ time_of_visit +" comment: "+ comments + " Assisted by : "+ name_of_the_person_who_assisted_the_visitor;
                 System.out.println("File already exists.");
             }
-            Files.write(Paths.get("visitor_"+fileName+".txt"), finaleData.getBytes());
+            Files.write(Paths.get("visitor_"+fileName+".txt"), finaleData.getBytes(), StandardOpenOption.APPEND);
 
         } catch (IOException e) {
             System.out.println("An error occurred.");
