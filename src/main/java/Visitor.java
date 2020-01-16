@@ -5,69 +5,68 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
-import java.sql.Time;
-import java.util.Date;
-import java.util.Scanner;
 
 public class Visitor {
-    private static String full_name;
-    private static String fileName = "NoNameYet";
-    private static int age;
-    private static String date_of_visit;
-    private static String time_of_visit;
-    private static String comments;
-    private static String name_of_the_person_who_assisted_the_visitor;
+    private String full_name;
+    private String date_of_visit;
+    private String time_of_visit;
+    private String comments;
+    private String name_of_the_person_who_assisted_the_visitor;
+    private String fileName;
+    private int age;
     static String finaleData = "";
 
-    public void setFull_name(String full_name) {
-        this.full_name = full_name;
+    Logger logger = LogManager.getLogger(Visitor.class);
+
+    Visitor(String name, String date, String time, String comment, String assistance, int ageOf){
+        full_name = name;
         fileName = full_name.replaceAll(" ", "_").toLowerCase();
+        date_of_visit = date;
+        time_of_visit = time;
+        comments = comment;
+        name_of_the_person_who_assisted_the_visitor = assistance;
+        age = ageOf;
     }
 
-    public void setAge(int age) {
-        this.age = age;
+    public Visitor() {
     }
 
-    public void setDate_of_visit(String date_of_visit) {
-        this.date_of_visit = date_of_visit;
-    }
+    void save() {
 
-    public void setTime_of_visit(String time_of_visit) {
-        this.time_of_visit = time_of_visit;
-    }
-
-    public void setComments(String comments) {
-        this.comments = comments;
-    }
-
-    public void setName_of_the_person_who_assisted_the_visitor(String name_of_the_person_who_assisted_the_visitor) {
-        this.name_of_the_person_who_assisted_the_visitor = name_of_the_person_who_assisted_the_visitor;
-    }
-
-    static void save() throws IOException {
         try {
             File visitorData = new File("visitor_"+fileName+".txt");
 
             if (visitorData.createNewFile()) {
-//                BufferedWriter saver = new BufferedWriter(new FileWriter("visitor_"+fileName+".txt"));
-//                saver.write(full_name);
-               finaleData += full_name + " Age: "+age + " Date: "+ date_of_visit + " Time: "+ time_of_visit +" comment: "+ comments + " Assisted by : "+ name_of_the_person_who_assisted_the_visitor;
-
-
-                System.out.println("File created: " + visitorData.getName());
-                Logger logger = LogManager.getLogger(Visitor.class);
-                logger.info("results in "+ "visitor_"+fileName+".txt" );
+                finaleData += full_name + " Age: "+age + " Date: "+ date_of_visit +
+                        " Time: "+ time_of_visit +" comment: "+ comments + " Assisted by : "+
+                        name_of_the_person_who_assisted_the_visitor;
+                logger.info("\nFile created: "+ visitorData.getName());
             } else {
-                finaleData += full_name + " Age: "+age + " Date: "+ date_of_visit + " Time: "+ time_of_visit +" comment: "+ comments + " Assisted by : "+ name_of_the_person_who_assisted_the_visitor;
-                System.out.println("File already exists.");
+                finaleData += "\n Date: "+ date_of_visit +
+                        " Time: "+ time_of_visit +" comment: "+ comments + " Assisted by : "+
+                        name_of_the_person_who_assisted_the_visitor;
+                logger.info("\nFile already exist and new information was added");
             }
             Files.write(Paths.get("visitor_"+fileName+".txt"), finaleData.getBytes(), StandardOpenOption.APPEND);
 
         } catch (IOException e) {
-            System.out.println("An error occurred.");
-            e.printStackTrace();
+            logger.error("An error occurred"+ e);
         }
+    }
 
+    void load(String full_name) throws IOException {
+        String retrieve = full_name.replaceAll(" ", "_").toLowerCase();
+        try {
+            BufferedReader file = new BufferedReader(new FileReader("visitor_"+ retrieve +".txt"));
+            System.out.println(file);
+            String line;
+            while ((line = file.readLine()) !=null){
+                System.out.println(line);
+            }
+            logger.info("\nRead was successful.");
+        } catch (FileNotFoundException err){
+            logger.error("\n"+err);
+        }
 
     }
 }
