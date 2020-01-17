@@ -13,8 +13,8 @@ public class Main {
                "Musa Mgijima",42);
        Visitor alice = new Visitor();
 
-       data.save();
-       alice.load("Alice Cooper");
+      // data.save();
+      alice.load("Alice Cooper");
     }
 
 }
